@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,6 +14,12 @@ export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState({ type: '', msg: '' });
 
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'DELETE_TEAM') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
+
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'DELETE_TEAM';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
@@ -26,10 +32,12 @@ export default function FormDialog() {
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/team/delete', { name: teamName, jwt });
       setStatus({ type: 'success', msg: res.data.Info });
-      //   globalDispatch({
-      //     type: 'GOT_TEAM',
-      //     payload: [...globalState.teams, res.data.team],
-      //   });
+
+      const teams = await axios.post('/api/team/view', {
+        jwt: sessionStorage.getItem('jwt'),
+      });
+      globalDispatch({ type: 'GOT_TEAM', payload: teams.data });
+
       handleDialogOpenState();
     } catch (error) {
       if (error?.response?.status === 500) {

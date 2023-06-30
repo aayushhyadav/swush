@@ -9,21 +9,11 @@ async function handleUser(req, res) {
 
     const { jwt } = req.session.get('user');
     const { _id: userId } = await getAuthenticatedUser(jwt);
-    let isAdmin = false;
 
     const { name: teamName } = req.query;
     const team = await Team.findOne({ name: teamName }).exec();
 
-    if (!team)
-      return res.json({ admins: [], members: [] })
-
-    for (const key of team.admins) {
-      if (key._id.toString() === userId.toString()) {
-        isAdmin = true;
-        break;
-      }
-    }
-    if (!isAdmin) throw new Error();
+    if (!team) return res.json({ admins: [], members: [] });
 
     const { admins } = await team
       .populate('admins._id', 'email name publicKey')

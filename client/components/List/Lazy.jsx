@@ -11,13 +11,14 @@ import GlobalContext from 'store/context';
 import { useContext } from 'react';
 import axios from 'axios';
 import StatusSnackbar from 'components/SnackBar/success';
+import { ControlCameraOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.primary.main,
     flexGrow: 1,
-    maxHeight: `calc(100vh - ${theme.appbarHeight * 2}rem)`,
+    minHeight: '100%',
     overflowY: 'auto',
     '&::-webkit-scrollbar': {
       width: theme.spacing(1.5),
@@ -69,33 +70,74 @@ export default function LazyList({ data: listData, type: listType, handler }) {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState();
 
-  let initialIndex =
-    listType === 'teams' ? globalState.teamIndex : globalState.secretIndex;
-  initialIndex = initialIndex ?? 0;
+  useEffect(() => {
+    switch (listType) {
+      case 'teams':
+        globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
+        globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
+        globalDispatch({ type: 'SELECTED_SECRET', payload: null });
+        globalDispatch({ type: 'SELECTED_DES', payload: null });
+        break;
+      case 'secrets':
+        globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
+        break;
+      case 'members':
+        globalDispatch({ type: 'SELECT_MEMBER', payload: selectedIndex });
+        break;
+      default:
+        break;
+    }
+  }, [selectedIndex]);
 
-  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
+  useEffect(() => {
+    let initialIndex =
+      listType === 'teams' ? globalState.teamIndex : globalState.secretIndex;
+    initialIndex = initialIndex ?? 0;
+    setSelectedIndex(initialIndex);
+  }, []);
+
+  useEffect(() => {
+    if (listType === 'secrets') {
+      setSelectedIndex(-1);
+    }
+  }, [globalState.teamIndex]);
+
+  useEffect(() => {
+    if (listType === 'secrets' && globalState.memberIndex !== -1) {
+      setSelectedIndex(-1);
+    }
+  }, [globalState.memberIndex]);
+
+  useEffect(() => {
+    if (listType === 'members' && globalState.secretIndex !== -1) {
+      setSelectedIndex(-1);
+    }
+  }, [globalState.secretIndex]);
+
+  useEffect(() => {
+    if (globalState.teams) {
+      if (
+        listType === 'teams' &&
+        globalState.numTeams !== -1 &&
+        globalState.numTeams > globalState.teams.length
+      ) {
+        setSelectedIndex(-1);
+      }
+      globalDispatch({ type: 'UPDATE_NUM_TEAMS', payload: globalState.teams });
+    }
+  }, [globalState.teams]);
 
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);
-
-    const jwt = localStorage.getItem('jwt');
-
     switch (listType) {
       case 'teams':
         sessionStorage.setItem('teamIndex', index);
-        globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
-        const teamName = globalState.teams[index]._id.name;
-
-        // const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
-        // const secretList = teamSecrets.data;
-
-        // globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
         break;
 
       case 'secrets':
         sessionStorage.setItem('secretIndex', index);
-        globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
 
         globalDispatch({
           type: 'SELECTED_SECRET',
@@ -115,9 +157,6 @@ export default function LazyList({ data: listData, type: listType, handler }) {
         });
         break;
 
-      case 'members':
-        globalDispatch({ type: 'SELECT_MEMBER', payload: selectedIndex });
-
       default:
         break;
     }
@@ -134,26 +173,20 @@ export default function LazyList({ data: listData, type: listType, handler }) {
             onClick={(_ev) => handleListItemClick(index)}
             className={classes.listItem}
             classes={{
-              // root: classes.MuiListItemRoot,
               button: classes.MuiListItemButton,
               gutters: classes.MuiListItemGutters,
-              // selected: classes.MuiListItemSelected,
             }}
           >
             <ListItemText primary={item} className={classes.listItemText} />
             <ListItemSecondaryAction>
-              {selectedIndex === index ? (
+              {selectedIndex === index && listType !== 'members' ? (
                 <IconButton
                   onClick={() => handler()}
                   // onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
                   edge="end"
                   aria-label="delete"
                 >
-                  {listType === 'teams' ? (
-                    <ClearIcon fontSize="small" />
-                  ) : (
-                    <DeleteIcon fontSize="small" />
-                  )}
+                  {listType === 'secrets' ? <DeleteIcon fontSize="small" /> : ''}
                 </IconButton>
               ) : (
                 ''

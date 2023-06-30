@@ -10,53 +10,7 @@ import AppBar from 'components/Appbar';
 import UpdateProfileDialog from 'components/Dialoag/UpdateProfile';
 import ProfileCard from 'components/CardView/ProfileCard';
 
-const useStyles = makeStyles((theme) => ({
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: `calc(100vh - ${theme.appbarHeight}rem)`,
-    minWidth: 275,
-    backgroundColor: theme.palette.primary.main,
-    padding: theme.spacing(5),
-    [theme.breakpoints.down(500)]: {
-      padding: theme.spacing(1),
-    },
-  },
-  root: {
-    height: '100%',
-    maxWidth: '90vw',
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: 0,
-  },
-  description: {
-    color: theme.palette.text.accent,
-  },
-  secretDescription: {
-    marginBottom: theme.spacing(2),
-  },
-  data: {
-    color: theme.palette.text.main,
-    fontWeight: 'normal',
-    fontSize: '15px',
-  },
-  buttonContainer: {
-    position: 'fixed',
-    bottom: theme.spacing(5),
-    [theme.breakpoints.down(500)]: {
-      bottom: theme.spacing(1),
-    },
-  },
-  updateButton: {
-    fontSize: '1.15rem',
-    color: theme.palette.text.main,
-    borderColor: theme.palette.text.accent,
-    marginTop: '5px',
-  },
-}));
-
 export default function UserProfile({ publicKey, email }) {
-  const classes = useStyles();
   const { globalState } = useContext(GlobalContext);
 
   return (
@@ -74,7 +28,7 @@ export default function UserProfile({ publicKey, email }) {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ query, req, res }) {
+export const getServerSideProps = withSession(async function ({ req }) {
   const sessionUser = req.session.get('user');
 
   if (!sessionUser) {
@@ -87,8 +41,7 @@ export const getServerSideProps = withSession(async function ({ query, req, res 
   }
 
   await connectToDatabase();
-
-  const user = await getAuthenticatedUser(sessionUser.jwt);
+  const user = await getAuthenticatedUser(req.__NEXT_INIT_QUERY.jwtToken);
 
   return {
     props: {

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: `calc(100vh - ${theme.appbarHeight}rem)`,
+    height: `100%`,
     minWidth: 275,
     backgroundColor: theme.palette.primary.main,
     padding: theme.spacing(5),
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '15px',
   },
   buttonContainer: {
-    position: 'fixed',
     bottom: theme.spacing(5),
     [theme.breakpoints.down(500)]: {
       bottom: theme.spacing(1),

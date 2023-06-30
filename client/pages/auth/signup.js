@@ -29,20 +29,27 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        const { jwt, publicKey, privateKey, name } = res.data;
+        const { jwt, publicKey, name } = res.data;
 
-        localStorage.setItem('jwt', jwt);
-        localStorage.setItem('publicKey', publicKey);
-        localStorage.setItem('privateKey', privateKey);
+        sessionStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('publicKey', publicKey);
         sessionStorage.setItem('username', name);
+
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
-        router.push('/auth/login');
+
+        router.push(
+          {
+            pathname: '/dashboard',
+            query: {
+              jwtToken: jwt,
+            },
+          },
+          '/dashboard'
+        );
       }
     } catch (err) {
-      const errMessage = 'Some error occured!';
-      setError(errMessage);
-      console.error(err);
+      setError(err.response.data.Error);
     }
   }
 

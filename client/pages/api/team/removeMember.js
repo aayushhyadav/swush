@@ -51,7 +51,7 @@ export default async (req, res) => {
 
     await vault.reEncrypt(publicKeys, decrypted.data);
     await user.removeTeam(team._id);
-    await user.notify(`You were removed from the team ${name}`);
+    await user.notify(`You were removed from ${name}`);
 
     return res.status(200).json({ Info: 'Removed member successfully!' });
   } catch (error) {

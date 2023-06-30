@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,9 +16,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Popover from '@material-ui/core/Popover';
 import GlobalContext from 'store/context';
-import axios from 'axios';
-import { Button } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
+import Badge from '@mui/material/Badge';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -99,26 +98,22 @@ export default function PrimarySearchAppBar({ name }) {
   const [notifAnchorEl, setNotifAnchorEl] = useState(null);
   const [accAnchorEl, setAccAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [notifications, setNotification] = useState(['No notifications']);
-  // const [username, setUsername] =useState('');
+  const [notifications, setNotification] = useState([]);
   const isMenuOpen = Boolean(accAnchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  // setUsername(localStorage.getItem('username'));
-  const handleNotifClick = async (event) => {
-    const jwt = localStorage.getItem('jwt');
-    setNotifAnchorEl(event.currentTarget);
-
-    const res = await axios.post('/api/team/viewNotifications', { jwt });
-
-    if (res.data.Notifications.length !== 0) {
-      setNotification(res.data.Notifications);
-    } else {
-      setNotification(['No notifications']);
+  useEffect(() => {
+    if (globalState.notifications) {
+      setNotification(globalState.notifications);
     }
+  }, [globalState.notifications]);
+
+  const handleNotifClick = async (event) => {
+    setNotifAnchorEl(event.currentTarget);
   };
 
   const handleNotifClose = () => {
+    globalDispatch({ type: 'RESET_NOTIFICATIONS' });
     setNotifAnchorEl(null);
   };
 
@@ -146,11 +141,29 @@ export default function PrimarySearchAppBar({ name }) {
   };
 
   const handleProfile = () => {
-    router.push('/user/profile');
+    const jwtToken = sessionStorage.getItem('jwt');
+    router.push(
+      {
+        pathname: '/user/profile',
+        query: {
+          jwtToken,
+        },
+      },
+      '/user/profile'
+    );
   };
 
   const handleDashboard = () => {
-    router.push('/dashboard');
+    const jwtToken = sessionStorage.getItem('jwt');
+    router.push(
+      {
+        pathname: '/dashboard',
+        query: {
+          jwtToken,
+        },
+      },
+      '/dashboard'
+    );
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -200,32 +213,34 @@ export default function PrimarySearchAppBar({ name }) {
               color="inherit"
               onClick={handleNotifClick}
             >
-              {/* <Badge badgeContent={11} color="secondary"> */}
-              <NotificationsIcon />
-              {/* </Badge> */}
+              <Badge badgeContent={notifications.length} color="secondary">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={notifAnchorEl}
-              onClose={handleNotifClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <List className={classes.notifList}>
-                {notifications.map((_item, index) => (
-                  <ListItem key={index} divider>
-                    <ListItemText primary={_item} />
-                  </ListItem>
-                ))}
-              </List>
-            </Popover>
+            {notifications.length > 0 && (
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={notifAnchorEl}
+                onClose={handleNotifClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <List className={classes.notifList}>
+                  {notifications.map((_item, index) => (
+                    <ListItem key={index} divider>
+                      <ListItemText primary={_item} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Popover>
+            )}
 
             <IconButton
               aria-label="account of current user"

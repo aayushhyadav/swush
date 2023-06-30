@@ -69,16 +69,22 @@ const SecretsList = ({ teamName }) => {
 
   const handleSecretDelete = async () => {
     try {
-      // setSuccessMessage('');
-      // setErrorMessage('');
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
 
-      console.log(jwt, teamName, secretId);
+      const res = await fetch('/api/team/deleteSecret', {
+        method: 'POST',
+        body: JSON.stringify({
+          jwt,
+          teamName,
+          secretId,
+        }),
+        header: { 'Content-type': 'application/json' },
+      });
 
-      const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
-      // setSuccessMessage(`Secret deleted`);
+      globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
+      setSuccessMessage(`Secret deleted`);
     } catch (error) {
       console.error(error);
       if (error?.response?.status === 500) {

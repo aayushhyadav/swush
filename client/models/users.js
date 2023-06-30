@@ -33,7 +33,7 @@ const UserSchema = new Schema({
     required: true,
   },
   privateKey: String,
-  notifications: [String]
+  notifications: [String],
 });
 
 /**
@@ -47,8 +47,6 @@ UserSchema.methods.storeKeys = async function (privateKey = null) {
 
   /* convert private key into message object for encryption */
   const message = openpgp.Message.fromText(privateKey);
-
-  // user.publicKey = publicKey;
 
   /* saving private key is optional */
   if (privateKey) {
@@ -77,8 +75,8 @@ UserSchema.methods.addTeam = async function (teamId) {
 UserSchema.methods.removeTeam = async function (teamId) {
   const user = this;
   user.teams = user.teams.filter((team) => {
-      return !team._id.equals(teamId)
-    });
+    return !team._id.equals(teamId);
+  });
   await user.save();
 };
 
@@ -87,7 +85,7 @@ UserSchema.methods.notify = async function (message) {
   const user = this;
   user.notifications.push(message);
   await user.save();
-}
+};
 
 /* if User model already exists, don't overwrite it */
 export default models?.User || model('User', UserSchema);

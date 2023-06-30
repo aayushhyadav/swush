@@ -9,7 +9,7 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { jwt, name, email } = req.body;
+    const { jwt, name, email, makeAdmin } = req.body;
 
     const admin = await getAuthenticatedUser(jwt);
     const team = await Team.findOne({ name }).exec();
@@ -32,7 +32,7 @@ export default async (req, res) => {
     if (isAlreadyMember)
       return res.status(200).json({ Info: 'Cannot add a member twice' });
 
-    await team.addMember(user._id);
+    makeAdmin ? await team.assignAdmin(user._id) : await team.addMember(user._id);
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
@@ -65,7 +65,10 @@ export default async (req, res) => {
     /* re-encrypt all the secrets */
     await vault.reEncrypt(publicKeys, decrypted.data);
 
-    await user.notify(`You were added to a new team ${name}`);
+    await user.notify(`You were added to ${name}!`);
+    if (makeAdmin) {
+      await user.notify(`You are now an admin for ${name}!`);
+    }
 
     return res.status(200).json({ Info: 'Added new member successfully!' });
   } catch (error) {

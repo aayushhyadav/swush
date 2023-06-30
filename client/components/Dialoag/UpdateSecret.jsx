@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,8 +17,15 @@ export default function FormDialog() {
   const [value, setSecret] = useState('');
   const [status, setStatus] = useState({ type: '', msg: '' });
 
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'UPDATE_SECRET') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
+
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'UPDATE_SECRET';
+    setSecret('');
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
@@ -26,7 +33,7 @@ export default function FormDialog() {
     try {
       e.preventDefault();
 
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
 
@@ -36,6 +43,7 @@ export default function FormDialog() {
         secretId,
         value,
       });
+      globalDispatch({ type: 'SELECTED_SECRET', payload: value });
 
       setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
@@ -75,7 +83,11 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleUpdateSecret} color="primary">
+          <Button
+            disabled={globalState.secretIndex === -1}
+            onClick={handleUpdateSecret}
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>

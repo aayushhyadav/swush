@@ -5,28 +5,27 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import AppBar from 'components/Appbar';
-import Divider from "@material-ui/core/Divider"
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: '750px'
+    maxWidth: '750px',
   },
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100vh',
+    height: '100%',
     backgroundColor: theme.palette.primary.main,
-    // justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   heading: {
     color: theme.palette.text.main,
     margin: `${theme.spacing(5)}px 0`,
     textAlign: 'center',
     [theme.breakpoints.down(500)]: {
-      fontSize: '2rem'
-    }
-  }
+      fontSize: '2rem',
+    },
+  },
 }));
 
 const Accordion = withStyles((theme) => ({
@@ -103,14 +102,15 @@ export default function Help() {
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
-                Teams need to manage various secret keys. For example, passwords, SSH keys,
-                OAuth tokens, etc. These can be difficult to manage across a team. Some
-                enterprise solutions like 1Password, LastPass, etc. exist. But they work on
-                the system on a master password. Also, all the data is compulsorily to be
-                stored on their servers. Instead we could use the concept of GPG keyrings
-                and PBKDF2, so that every team member has a key which they can use to unlock
-                the vault. If a team member leaves the organization, just remove their key
-                access. No need to memorize a new master password
+                Teams need to manage various secret keys. For example, passwords, SSH
+                keys, OAuth tokens, etc. These can be difficult to manage across a team.
+                Some enterprise solutions like 1Password, LastPass, etc. exist. But they
+                work on the system on a master password. Also, all the data is
+                compulsorily to be stored on their servers. Instead we could use the
+                concept of GPG keyrings and PBKDF2, so that every team member has a key
+                which they can use to unlock the vault. If a team member leaves the
+                organization, just remove their key access. No need to memorize a new
+                master password
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -125,12 +125,12 @@ export default function Help() {
             <AccordionDetails>
               <Typography>
                 Every team has a public keyring which contains the public keys of all the
-                team members. When a member adds a secret to the team vault it is encrypted
-                using the public keyring. All the public keys will be combined to form a
-                hash which will be used to encrypt the secret. So when some other team
-                member tries to view the secret it will be decrypted using the member's
-                private key. Decryption will only work if member's public key belongs to the
-                keyring.
+                team members. When a member adds a secret to the team vault it is
+                encrypted using the public keyring. All the public keys will be combined
+                to form a hash which will be used to encrypt the secret. So when some
+                other team member tries to view the secret it will be decrypted using the
+                member's private key. Decryption will only work if member's public key
+                belongs to the keyring.
               </Typography>
             </AccordionDetails>
           </Accordion>

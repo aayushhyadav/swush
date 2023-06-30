@@ -54,15 +54,6 @@ function MyApp({ Component, pageProps }) {
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
-        <style global jsx>{`
-          body {
-            // height: 100vh;
-            overflow-y: hidden;
-          }
-          // #__next {
-          //   height: 100%;
-          // }
-        `}</style>
       </ThemeProvider>
     </GlobalStateProvider>
   );

@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
-import CreateTeamDialog from 'components/Dialoag/CreateTeam';
+import AddMemberDialog from 'components/Dialoag/AddMember';
 import SkeletonList from 'components/List/SkeletonList';
 
 const useStyles = makeStyles((theme) => ({
@@ -71,15 +71,8 @@ const MembersList = ({ teamName }) => {
         name: teamName,
         email,
       });
-
-      // setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
       console.log(error);
-      if (error?.response?.status === 500) {
-        // setStatus({ type: 'error', msg: error.response.data.Error });
-      } else {
-        // setStatus({ type: 'error', msg: 'Some error occured!' });
-      }
     }
   }
 
@@ -103,7 +96,7 @@ const MembersList = ({ teamName }) => {
         <LazyList data={members} type="members" handler={handleRemoveMember} />
       )}
 
-      <CreateTeamDialog />
+      <AddMemberDialog />
     </>
   );
 };

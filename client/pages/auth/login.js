@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Link from 'next/link';
 import axios from 'axios';
+import withSession from 'utils/withSession';
+import { connectToDatabase } from 'utils/connectDb';
 
 import Context from 'store/context';
 import styles from 'styles/auth/Login.module.css';
@@ -38,16 +40,26 @@ export default function Login() {
       if (res.status === 200) {
         const { jwt, name, email, publicKey, userid } = res.data;
 
-        localStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('jwt', jwt);
         sessionStorage.setItem('username', name);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('publicKey', publicKey);
         sessionStorage.setItem('userid', userid);
 
-        globalDispatch({ type: 'LOGIN' });
+        const notifications = await axios.post('/api/team/viewNotifications', { jwt });
+
+        globalDispatch({ type: 'LOGIN', payload: notifications.data.Notifications });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
-        router.push(dashboardLink);
+        router.push(
+          {
+            pathname: dashboardLink,
+            query: {
+              jwtToken: jwt,
+            },
+          },
+          dashboardLink
+        );
       }
     } catch (error) {
       if (error?.response?.status === 401) {
@@ -94,3 +106,10 @@ export default function Login() {
     </div>
   );
 }
+
+export const getServerSideProps = withSession(async function () {
+  await connectToDatabase();
+  return {
+    props: {},
+  };
+});

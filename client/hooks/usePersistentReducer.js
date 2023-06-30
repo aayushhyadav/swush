@@ -17,7 +17,7 @@ function init(initialValues) {
   }
 
   try {
-    const storedJwt = localStorage.getItem('jwt');
+    const storedJwt = sessionStorage.getItem('jwt');
     initialState['jwt'] = storedJwt ?? null;
     initialState['isLoggedIn'] = storedJwt ? true : false;
     initialState['username'] = sessionStorage.getItem('username') ?? '';
@@ -36,7 +36,8 @@ const reducer = (state, action) => {
       return {
         ...state,
         isLoggedIn: true,
-        jwt: localStorage.getItem('jwt'),
+        jwt: sessionStorage.getItem('jwt'),
+        notifications: action.payload,
       };
 
     case 'LOGOUT':
@@ -50,6 +51,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         teams: action.payload,
+      };
+
+    case 'UPDATE_NUM_TEAMS':
+      return {
+        ...state,
+        numTeams: action.payload.length,
       };
 
     case 'GOT_MEMBER':
@@ -134,6 +141,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedFileName: action.payload,
+      };
+
+    case 'RESET_NOTIFICATIONS':
+      return {
+        ...state,
+        notifications: [],
       };
 
     default:

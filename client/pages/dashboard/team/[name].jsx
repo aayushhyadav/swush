@@ -34,11 +34,15 @@ export default function Dashboard({ teamName }) {
   const [isMemberView, setIsMemberView] = useState(false);
 
   useEffect(() => {
-    setIsMemberView(true);
+    if (globalState.memberIndex !== -1) {
+      setIsMemberView(true);
+    }
   }, [globalState.memberIndex]);
 
   useEffect(() => {
-    setIsMemberView(false);
+    if (globalState.secretIndex !== -1) {
+      setIsMemberView(false);
+    }
   }, [globalState.secretIndex]);
 
   return (

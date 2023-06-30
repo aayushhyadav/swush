@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
   },
   container: {
-    height: 'calc(100vh - 4.05rem)',
+    height: '100%',
   },
 }));
 
@@ -35,7 +35,7 @@ export default function Dashboard({ username }) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (!globalState.teams) return;
+    if (!globalState.teams || !globalState.teams[globalState.teamIndex]) return;
     setTeamName(globalState.teams[globalState.teamIndex]._id.name);
     if (
       globalState.teams[globalState.teamIndex]._id.admins[0]._id ===
@@ -88,7 +88,7 @@ export const getServerSideProps = withSession(async function ({ req }) {
   }
 
   await connectToDatabase();
-  const user = await getAuthenticatedUser(sessionUser.jwt);
+  const user = await getAuthenticatedUser(req.__NEXT_INIT_QUERY.jwtToken);
 
   return {
     props: {

@@ -36,7 +36,7 @@ export default function SpeedDials() {
   const [teamName, setTeamName] = useState('');
 
   useEffect(() => {
-    if (!globalState.teams) return;
+    if (!globalState.teams || !globalState.teams[globalState.teamIndex]) return;
     setTeamName(globalState.teams[globalState.teamIndex]._id.name);
   }, [globalState.teamIndex]);
 

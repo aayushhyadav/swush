@@ -9,7 +9,6 @@ export default function withSession(handler) {
     cookieOptions: {
       httpOnly: true,
       sameSite: 'strict',
-      // secure: false,
       secure: process.env.NODE_ENV === 'production',
     },
   });

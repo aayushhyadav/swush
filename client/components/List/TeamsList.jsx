@@ -7,8 +7,6 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateTeamDialog from 'components/Dialoag/CreateTeam';
 import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
-import { useRouter } from 'next/router';
-// import useSwr from "swr"
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -33,7 +31,9 @@ const TeamsList = () => {
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
 
-  const { loading, data, error } = useFetch('/api/team/view');
+  const { loading, data, error } = useFetch('/api/team/view', {
+    jwt: sessionStorage.getItem('jwt'),
+  });
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -54,18 +54,15 @@ const TeamsList = () => {
 
   async function handleRemoveMember() {
     try {
-      setSuccessMessage('');
-      setErrorMessage('');
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[selectedIndex]._id.name;
       const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
-
-      // setSuccessMessage(`You left the team ${teamName}!`);
+      setSuccessMessage(`You left the team ${teamName}!`);
     } catch (error) {
       if (error?.response?.status === 500) {
-        // setErrorMessage(error.response.data.Error);
+        setErrorMessage(error.response.data.Error);
       } else {
-        // setErrorMessage('Some error occurred!');
+        setErrorMessage('Some error occurred!');
       }
     }
   }
@@ -80,7 +77,6 @@ const TeamsList = () => {
           <AddIcon />
         </IconButton>
       </Paper>
-
       <Divider />
 
       {error ? 'Some error occurred' : ''}

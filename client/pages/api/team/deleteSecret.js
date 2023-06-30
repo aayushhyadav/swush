@@ -6,8 +6,7 @@ import Vault from 'models/vaults';
 export default async (req, res) => {
   try {
     await connectToDatabase();
-    const { jwt, teamName, secretId } = req.body;
-
+    const { jwt, teamName, secretId } = JSON.parse(req.body);
     const user = await getAuthenticatedUser(jwt);
 
     const team = await Team.findOne({ name: teamName }).exec();

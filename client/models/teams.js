@@ -29,12 +29,10 @@ const TeamSchema = new Schema({
 });
 
 /* assign admin for the team */
-TeamSchema.methods.assignAdmin = async function (id) {
+TeamSchema.methods.assignAdmin = async function (userId) {
   const team = this;
-  const admin = id;
-  const member = id;
-  team.admins = team.admins.concat({ admin });
-  team.members = team.members.concat({ member });
+  team.admins.push({ _id: userId });
+  team.members.push({ _id: userId });
   await team.save();
 };
 
@@ -48,9 +46,16 @@ TeamSchema.methods.addMember = async function (userId) {
 /* removes a member from the team */
 TeamSchema.methods.removeMember = async function (userId) {
   const team = this;
+
   team.members = team.members.filter((member) => {
     if (member._id && !member._id.equals(userId)) {
       return member;
+    }
+  });
+
+  team.admins = team.admins.filter((admin) => {
+    if (admin._id && !admin._id.equals(userId)) {
+      return admin;
     }
   });
   await team.save();

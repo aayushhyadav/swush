@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,19 +15,24 @@ import axios from 'axios';
 export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
   const [status, setStatus] = useState({ type: '', msg: '' });
+
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'REMOVE_MEMBER') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
 
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'REMOVE_MEMBER';
+    setEmail('');
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
   async function handleRemoveMember(e) {
     try {
       e.preventDefault();
-
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/team/removeMember', {
         jwt,
