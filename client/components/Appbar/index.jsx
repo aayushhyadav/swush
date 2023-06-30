@@ -27,11 +27,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-      marginRight: theme.spacing(2),
-    },
+    display: 'block',
+    marginRight: theme.spacing(2),
   },
   search: {
     position: 'relative',
@@ -258,6 +255,7 @@ export default function PrimarySearchAppBar({ name }) {
               <HelpIcon />
             </IconButton>
           </div>
+
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"

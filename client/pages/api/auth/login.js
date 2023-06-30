@@ -21,13 +21,18 @@ const LoginApi = async (req, res) => {
     }
 
     const jwt = generateJwt(email);
-    const { name, publicKey } = user;
+    const { name, publicKey, _id } = user;
 
     req.session.set('user', { jwt: jwt });
     await req.session.save();
-    res
-      .status(200)
-      .json({ Info: 'Logged in successfully!', jwt, name, email, publicKey });
+    res.status(200).json({
+      Info: 'Logged in successfully!',
+      jwt,
+      name,
+      email,
+      publicKey,
+      userid: _id,
+    });
   } catch (error) {
     res.status(500).json({ Error: 'Internal server error.' });
     console.error(error);

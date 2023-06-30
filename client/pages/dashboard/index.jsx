@@ -32,10 +32,16 @@ export default function Dashboard({ username }) {
   const { globalState } = useContext(GlobalContext);
   const classes = useStyles();
   const [teamName, setTeamName] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!globalState.teams || !globalState.teams[globalState.teamIndex]) return;
     setTeamName(globalState.teams[globalState.teamIndex]._id.name);
+    if (
+      globalState.teams[globalState.teamIndex]._id.admins[0]._id ===
+      sessionStorage.getItem('userid')
+    )
+      setIsAdmin(true);
   }, [globalState.teamIndex]);
 
   return (
@@ -64,7 +70,7 @@ export default function Dashboard({ username }) {
         </Grid>
       </main>
 
-      <SpeedDial />
+      {isAdmin ? <SpeedDial /> : ''}
     </>
   );
 }

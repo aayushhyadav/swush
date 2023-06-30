@@ -24,17 +24,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard({ teamName }) {
-  const { globalState } = useContext(GlobalContext);
+  const { globalState, globalDispatch } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
 
   useEffect(() => {
+    globalDispatch({ type: 'SELECT_TEAM', payload: -1 });
+  }, []);
+
+  useEffect(() => {
+    if (globalState.secretIndex === -1) return;
     router.push('/m/data');
   }, [globalState.secretIndex]);
 
   return (
     <>
-      <AppBar />
+      <AppBar name={teamName} />
 
       <Divider />
 
@@ -44,7 +49,7 @@ export default function Dashboard({ teamName }) {
         </Grid>
       </Grid>
 
-      <SpeedDial />
+      {/* <SpeedDial /> */}
     </>
   );
 }

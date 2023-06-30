@@ -25,10 +25,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-  const { globalState } = useContext(GlobalContext);
+  const { globalState, globalDispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [description, setDescription] = useState(null);
   const [secret, setSecret] = useState(null);
+
+  useEffect(() => {
+    globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
+  }, []);
 
   useEffect(() => {
     setSecret(globalState?.selectedSecret);
@@ -50,7 +54,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
 
-      <SpeedDial />
+      {/* <SpeedDial /> */}
     </>
   );
 }

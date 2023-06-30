@@ -35,7 +35,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!globalState.teams) return;
-    if (globalState.teamIndex == -1) return;
+    if (globalState.teamIndex === -1) return;
     const teamName = globalState.teams[globalState.teamIndex]._id.name;
     router.push(`/m/secrets/${teamName}`);
   }, [globalState.teamIndex]);
@@ -52,7 +52,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
 
-      <SpeedDial />
+      {/* <SpeedDial /> */}
     </>
   );
 }

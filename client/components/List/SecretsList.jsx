@@ -6,8 +6,8 @@ import SkeletonList from 'components/List/SkeletonList';
 import { Typography, Paper, IconButton, Divider } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CreateSecretDialog from 'components/Dialoag/CreateSecret';
-import useFetch from 'hooks/useFetch';
 import useSwr from 'swr';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -86,6 +86,7 @@ const SecretsList = ({ teamName }) => {
       globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
       setSuccessMessage(`Secret deleted`);
     } catch (error) {
+      console.error(error);
       if (error?.response?.status === 500) {
         // setErrorMessage(error.response.data.Error);
       } else {
