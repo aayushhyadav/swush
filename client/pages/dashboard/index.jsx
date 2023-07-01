@@ -77,6 +77,7 @@ export default function Dashboard({ username }) {
 
 export const getServerSideProps = withSession(async function ({ req }) {
   const sessionUser = req.session.get('user');
+  console.log(req.__NEXT_INIT_QUERY, 'from dashboard');
 
   if (!sessionUser) {
     return {
