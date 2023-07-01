@@ -28,25 +28,29 @@ export default function UserProfile({ publicKey, email }) {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ req }) {
-  const sessionUser = req.session.get('user');
+export const getServerSideProps = withSession(async function ({ req, query }) {
+  try {
+    const sessionUser = req.session.get('user');
 
-  if (!sessionUser) {
+    if (!sessionUser) {
+      return {
+        redirect: {
+          destination: '/auth/login',
+          permanent: false,
+        },
+      };
+    }
+
+    await connectToDatabase();
+    const user = await getAuthenticatedUser(query.jwtToken);
+
     return {
-      redirect: {
-        destination: '/auth/login',
-        permanent: false,
+      props: {
+        publicKey: user.publicKey,
+        email: user.email,
       },
     };
+  } catch (error) {
+    console.log(error);
   }
-
-  await connectToDatabase();
-  const user = await getAuthenticatedUser(req.__NEXT_INIT_QUERY.jwtToken);
-
-  return {
-    props: {
-      publicKey: user.publicKey,
-      email: user.email,
-    },
-  };
 });

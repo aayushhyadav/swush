@@ -84,22 +84,26 @@ export default function Dashboard({ teamName }) {
 }
 
 export const getServerSideProps = withSession(async function ({ query, req }) {
-  const user = req.session.get('user');
+  try {
+    const user = req.session.get('user');
 
-  if (!user) {
+    if (!user) {
+      return {
+        redirect: {
+          destination: '/auth/login',
+          permanent: false,
+        },
+      };
+    }
+
+    const { name } = query;
+
     return {
-      redirect: {
-        destination: '/auth/login',
-        permanent: false,
+      props: {
+        teamName: name,
       },
     };
+  } catch (error) {
+    console.log(error);
   }
-
-  const { name } = query;
-
-  return {
-    props: {
-      teamName: name,
-    },
-  };
 });

@@ -12,27 +12,31 @@ export default function TeamViewById({ user, team }) {
 }
 
 export const getServerSideProps = withSession(async function ({ query, req, res }) {
-  const user = req.session.get('user');
-  const { id: teamId } = query;
+  try {
+    const user = req.session.get('user');
+    const { id: teamId } = query;
 
-  if (!user) {
+    if (!user) {
+      return {
+        redirect: {
+          destination: '/auth/login',
+          permanent: false,
+        },
+      };
+    }
+
+    await connectToDatabase();
+    const team = await Team.findById(teamId).exec();
+
     return {
-      redirect: {
-        destination: '/auth/login',
-        permanent: false,
+      props: {
+        user,
+        team: {
+          name: team.name,
+        },
       },
     };
+  } catch (error) {
+    console.log(error);
   }
-
-  await connectToDatabase();
-  const team = await Team.findById(teamId).exec();
-
-  return {
-    props: {
-      user,
-      team: {
-        name: team.name,
-      },
-    },
-  };
 });
