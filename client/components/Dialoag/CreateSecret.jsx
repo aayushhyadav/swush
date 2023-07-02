@@ -107,10 +107,13 @@ export default function DialogSelect() {
         filename,
       });
       setStatus({ type: 'success', msg: res.data.Info });
+
       globalDispatch({
         type: 'GOT_SECRET',
         payload: [...globalState.teams, res.data.team],
       });
+      globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
+
       handleDialogOpenState();
     } catch (error) {
       if (error?.response?.status === 500) {
