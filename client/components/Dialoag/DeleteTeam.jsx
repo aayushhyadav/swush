@@ -13,6 +13,7 @@ import axios from 'axios';
 export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState({ type: '', msg: '' });
+  const [teamName, setTeamName] = useState('');
 
   useEffect(() => {
     if (globalState.nameOpenDialog === 'DELETE_TEAM') {
@@ -61,6 +62,10 @@ export default function FormDialog() {
         <DialogContent>
           <TextField
             autoFocus
+            value={teamName}
+            onChange={(e) => {
+              setTeamName(e.target.value);
+            }}
             margin="dense"
             label="Type the team name to delete"
             type="text"
@@ -71,7 +76,7 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteTeam} color="primary">
+          <Button disabled={teamName === ''} onClick={handleDeleteTeam} color="primary">
             Delete
           </Button>
         </DialogActions>

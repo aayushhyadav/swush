@@ -90,7 +90,11 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleUpdateProfile} color="primary">
+          <Button
+            disabled={name === '' && password == ''}
+            onClick={handleUpdateProfile}
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>

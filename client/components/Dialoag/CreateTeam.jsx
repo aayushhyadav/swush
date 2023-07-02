@@ -76,7 +76,7 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleCreateTeam} color="primary">
+          <Button disabled={teamName === ''} onClick={handleCreateTeam} color="primary">
             Create
           </Button>
         </DialogActions>

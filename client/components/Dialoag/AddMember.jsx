@@ -91,7 +91,7 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddMember} color="primary">
+          <Button disabled={email === ''} onClick={handleAddMember} color="primary">
             Add
           </Button>
         </DialogActions>
