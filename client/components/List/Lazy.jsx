@@ -114,6 +114,9 @@ export default function LazyList({ data: listData, type: listType, handler }) {
     if (listType === 'members' && globalState.secretIndex !== -1) {
       setSelectedIndex(-1);
     }
+    if (listType === 'secrets' && globalState.secretIndex === -1) {
+      setSelectedIndex(-1);
+    }
   }, [globalState.secretIndex]);
 
   useEffect(() => {
