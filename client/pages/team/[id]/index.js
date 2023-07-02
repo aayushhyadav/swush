@@ -11,7 +11,7 @@ export default function TeamViewById({ user, team }) {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ query, req, res }) {
+export const getServerSideProps = withSession(async function ({ query, req }) {
   try {
     const user = req.session.get('user');
     const { id: teamId } = query;

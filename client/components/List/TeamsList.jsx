@@ -32,7 +32,7 @@ const TeamsList = () => {
   const [teamNames, setTeamNames] = useState([]);
 
   const { loading, data, error } = useFetch('/api/team/view', {
-    jwt: sessionStorage.getItem('jwt'),
+    jwt: process.browser ? sessionStorage.getItem('jwt') : '',
   });
 
   useEffect(() => {

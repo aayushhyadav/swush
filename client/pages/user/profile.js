@@ -28,7 +28,7 @@ export default function UserProfile({ publicKey, email }) {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ req, query }) {
+export const getServerSideProps = withSession(async function ({ req }) {
   try {
     const sessionUser = req.session.get('user');
 
@@ -42,7 +42,7 @@ export const getServerSideProps = withSession(async function ({ req, query }) {
     }
 
     await connectToDatabase();
-    const user = await getAuthenticatedUser(query.jwtToken);
+    const user = await getAuthenticatedUser(sessionUser.jwt);
 
     return {
       props: {

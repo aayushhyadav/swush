@@ -38,15 +38,7 @@ export default function Login() {
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
-        router.push(
-          {
-            pathname: '/dashboard',
-            query: {
-              jwtToken: jwt,
-            },
-          },
-          '/dashboard'
-        );
+        router.push('/dashboard');
       }
     } catch (err) {
       setError(err.response.data.Error);

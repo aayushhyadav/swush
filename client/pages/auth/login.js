@@ -51,15 +51,7 @@ export default function Login() {
         globalDispatch({ type: 'LOGIN', payload: notifications.data.Notifications });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
-        router.push(
-          {
-            pathname: dashboardLink,
-            query: {
-              jwtToken: jwt,
-            },
-          },
-          dashboardLink
-        );
+        router.push(dashboardLink);
       }
     } catch (error) {
       if (error?.response?.status === 401) {

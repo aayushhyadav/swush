@@ -141,29 +141,11 @@ export default function PrimarySearchAppBar({ name }) {
   };
 
   const handleProfile = () => {
-    const jwtToken = sessionStorage.getItem('jwt');
-    router.push(
-      {
-        pathname: '/user/profile',
-        query: {
-          jwtToken,
-        },
-      },
-      '/user/profile'
-    );
+    router.push('/user/profile');
   };
 
   const handleDashboard = () => {
-    const jwtToken = sessionStorage.getItem('jwt');
-    router.push(
-      {
-        pathname: '/dashboard',
-        query: {
-          jwtToken,
-        },
-      },
-      '/dashboard'
-    );
+    router.push('/dashboard');
   };
 
   const handleMobileMenuOpen = (event) => {
