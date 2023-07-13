@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from 'next/link';
 import axios from 'axios';
 import withSession from 'utils/withSession';
@@ -17,11 +18,16 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [dashboardLink, setDashboardLink] = useState('/dashboard');
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     if (matches) setDashboardLink('/m/teams');
     else setDashboardLink('/dashboard');
   }, [matches]);
+
+  useEffect(() => {
+    setLoader(false);
+  }, [error]);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -30,6 +36,7 @@ export default function Login() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
+      setLoader(true);
 
       const res = await axios.post(
         '/api/auth/login',
@@ -64,12 +71,13 @@ export default function Login() {
 
   return (
     <div className={styles.main}>
+      {loader ? <CircularProgress /> : ''}
       <div className={styles.main__box}>
         <p className={styles.error}>{error}</p>
-
         <form onSubmit={handleSubmit}>
           <input
             className={styles.input}
+            disabled={loader}
             type="email"
             name="email"
             placeholder="example@domain.com"
@@ -79,6 +87,7 @@ export default function Login() {
 
           <input
             className={styles.input}
+            disabled={loader}
             type="password"
             name="password"
             placeholder="password"
@@ -86,7 +95,11 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className={styles.submit} type="submit" disabled={!validateForm()}>
+          <button
+            className={styles.submit}
+            type="submit"
+            disabled={!validateForm() || loader}
+          >
             Login
           </button>
         </form>
