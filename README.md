@@ -3,14 +3,14 @@
 
 <h2 align="center">A secure vault for teams</h2>
 
-There are many password managers available. But their common weak point is
+There are many password managers available. However, their common weak point is
 the master password. In a developer circle, where team members keep joining and
 leaving projects, it can become cumbersome for the remaining team members to
-remember the new master password after a member left.
+remember the new master password after any member leaves.
 
 We propose to use the GPG keyring technology instead of a master password to
 unlock the vault. Using our application, the use of master passwords is
-completely mitigated.
+eliminated completely.
 
 Users can create teams for storing confidential information 
 ( ssh keys, passwords, oauth tokens, files) related to their projects.
