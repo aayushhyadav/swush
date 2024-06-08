@@ -13,11 +13,12 @@ const LoginApi = async (req, res) => {
       { email: email },
       'password tokens name publicKey privateKey'
     ).exec();
+
     if (!user) {
-      return res.status(401).json({ Error: 'User not found!' });
+      return res.status(404).json({ Error: 'User not found!' });
     }
     if (password !== user.password) {
-      return res.status(401).json({ Error: 'Incorrect password!' });
+      return res.status(200).json({ Error: 'Incorrect password!' });
     }
 
     const jwt = generateJwt(email);
@@ -25,6 +26,7 @@ const LoginApi = async (req, res) => {
 
     req.session.set('user', { jwt: jwt });
     await req.session.save();
+    
     res.status(200).json({
       Info: 'Logged in successfully!',
       jwt,
