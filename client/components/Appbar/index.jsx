@@ -18,6 +18,7 @@ import Popover from '@material-ui/core/Popover';
 import GlobalContext from 'store/context';
 import HelpIcon from '@material-ui/icons/Help';
 import Badge from '@mui/material/Badge';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -133,10 +134,11 @@ export default function PrimarySearchAppBar({ name }) {
     handleMobileMenuClose();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     globalDispatch({ type: 'LOGOUT' });
     localStorage.clear();
     sessionStorage.clear();
+    await axios.get("/api/auth/logout");
     router.push('/');
   };
 
