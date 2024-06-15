@@ -6,6 +6,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import withSession from 'utils/withSession';
 import { connectToDatabase } from 'utils/connectDb';
+import populateSessionStorage from 'utils/populateSessionStorage';
 
 import Context from 'store/context';
 import styles from 'styles/auth/Login.module.css';
@@ -45,14 +46,8 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        const { jwt, name, email, publicKey, userid } = res.data;
-
-        sessionStorage.setItem('jwt', jwt);
-        sessionStorage.setItem('username', name);
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('publicKey', publicKey);
-        sessionStorage.setItem('userid', userid);
-
+        const { jwt, name } = res.data;
+        populateSessionStorage(res.data);
         const notifications = await axios.post('/api/team/viewNotifications', { jwt });
 
         globalDispatch({ type: 'LOGIN', payload: notifications.data.Notifications });

@@ -11,7 +11,7 @@ export default async function generateKeys(email) {
   const { privateKeyArmored, publicKeyArmored } = await openpgp.generateKey({
     type: 'ecc',
     curve: 'curve25519',
-    userIds: { email },
+    userIDs: { email },
     passphrase: process.env.PASSPHRASE,
   });
 

@@ -201,6 +201,7 @@ export default function PrimarySearchAppBar({ name }) {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            
             {notifications.length > 0 && (
               <Popover
                 id={id}
@@ -235,6 +236,7 @@ export default function PrimarySearchAppBar({ name }) {
             >
               <AccountCircle />
             </IconButton>
+
             <IconButton edge="end" variant="contained" color="inherit" href="/help">
               <HelpIcon />
             </IconButton>

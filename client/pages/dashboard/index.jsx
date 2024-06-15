@@ -7,12 +7,14 @@ import GlobalContext from 'store/context';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
+import axios from 'axios';
 
 import TeamsList from 'components/List/TeamsList';
 import SecretsList from 'components/List/SecretsList';
 import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
 import SpeedDial from 'components/SpeedDial';
+import populateSessionStorage from 'utils/populateSessionStorage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,10 +30,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard({ username }) {
-  const { globalState } = useContext(GlobalContext);
+export default function Dashboard(userData) {
+  const { globalState, globalDispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [teamName, setTeamName] = useState('');
+
+  useEffect(() => {
+    async function fetchData(data) {
+      populateSessionStorage(data);
+      const {jwt} = data;
+      const notifications = await axios.post('/api/team/viewNotifications', {jwt});
+
+      globalDispatch({ type: 'LOGIN', payload: notifications.data.Notifications });
+      globalDispatch({ type: 'SET_NAME', payload: data.username });
+    }
+    if (sessionStorage.length == 0) {
+      fetchData(userData)
+    }
+  }, []);
 
   useEffect(() => {
     if (!globalState.teams || !globalState.teams[globalState.teamIndex]) return;
@@ -40,7 +56,7 @@ export default function Dashboard({ username }) {
 
   return (
     <>
-      <AppBar name={username} />
+      <AppBar name={userData.username} />
 
       <Divider />
 
@@ -88,6 +104,10 @@ export const getServerSideProps = withSession(async function ({ req }) {
     return {
       props: {
         username: user.name,
+        jwt: sessionUser.jwt,
+        publicKey: user.publicKey,
+        email: user.email,
+        userid: JSON.stringify(user._id)
       },
     };
   } catch (error) {
