@@ -10,7 +10,7 @@ import AppBar from 'components/Appbar';
 import UpdateProfileDialog from 'components/Dialoag/UpdateProfile';
 import ProfileCard from 'components/CardView/ProfileCard';
 
-export default function UserProfile({ publicKey, email }) {
+export default function UserProfile({ username, publicKey, email }) {
   const { globalState } = useContext(GlobalContext);
 
   return (
@@ -18,7 +18,7 @@ export default function UserProfile({ publicKey, email }) {
       <AppBar />
       <Divider />
       <ProfileCard
-        name={globalState.username}
+        name={username}
         publicKey={publicKey}
         email={email}
         showActions
@@ -48,6 +48,7 @@ export const getServerSideProps = withSession(async function ({ req }) {
       props: {
         publicKey: user.publicKey,
         email: user.email,
+        username: user.name
       },
     };
   } catch (error) {
