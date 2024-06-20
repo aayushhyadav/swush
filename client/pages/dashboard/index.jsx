@@ -63,7 +63,7 @@ export default function Dashboard(userData) {
       <main className={classes.root}>
         <Grid container className={classes.container}>
           <Grid item xs className={classes.listContainer}>
-            <TeamsList />
+            <TeamsList jwt={userData.jwt} />
           </Grid>
 
           <Divider orientation="vertical" flexItem />

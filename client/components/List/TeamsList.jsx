@@ -26,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeamsList = () => {
+const TeamsList = ({jwt}) => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
 
   const { loading, data, error } = useFetch('/api/team/view', {
-    jwt: process.browser ? sessionStorage.getItem('jwt') : '',
+    jwt: process.browser ? jwt : '',
   });
 
   useEffect(() => {
