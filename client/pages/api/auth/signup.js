@@ -1,10 +1,11 @@
 import { connectToDatabase } from 'utils/connectDb';
 import User from 'models/users';
 import generateKeys from 'utils/generateKeys';
+import withSession from 'utils/withSession';
 import { generateJwt, decodeJwt } from 'utils/generateJwt';
 import { sendWelcomeEmail } from 'utils/sendEmail';
 
-export default async (req, res) => {
+const SignUpApi = async (req, res) => {
   try {
     await connectToDatabase();
 
@@ -38,6 +39,9 @@ export default async (req, res) => {
     /* send welcome email to the user */
     // sendWelcomeEmail(user.email, user.name);
 
+    req.session.set('user', { jwt: jwt });
+    await req.session.save();
+    
     res.status(200).json({
       Info: 'User successfully created!',
       publicKey,
@@ -53,3 +57,5 @@ export default async (req, res) => {
     res.status(500).json({ Error: 'Internal server error.' });
   }
 };
+
+export default withSession(SignUpApi);
