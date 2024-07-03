@@ -46,12 +46,12 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
 
   const publicKeysArmored = publicKeys;
 
-  /* read the armored key */
-  const privKey = await openpgp.readKey({ armoredKey: privateKey });
+  /* decrypt the private key using passphrase */
   const passphrase = process.env.PASSPHRASE;
-
-  /* decrypt it using passphrase */
-  await privKey.decrypt(passphrase);
+  const privKey = await openpgp.decryptKey({
+    privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
+    passphrase
+  })
 
   if (typeof vault.ssh !== undefined) {
     var ssh_secret = vault.ssh;
@@ -78,21 +78,18 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
-      const decrypted = await openpgp.decrypt({
+      const {data: decrypted} = await openpgp.decrypt({
         message,
-        privateKeys: privKey,
+        decryptionKeys: privKey,
       });
 
-      /* convert decrypted data into plain text */
-      const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-
       /* convert the decrypted secret into message object */
-      message = openpgp.Message.fromText(plaintext);
+      message = await openpgp.createMessage({text: decrypted});
 
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys,
+        encryptionKeys: pubKeys,
       });
     });
   }
@@ -103,21 +100,18 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
-      const decrypted = await openpgp.decrypt({
+      const {data: decrypted} = await openpgp.decrypt({
         message,
-        privateKeys: privKey,
+        decryptionKeys: privKey,
       });
 
-      /* convert decrypted data into plain text */
-      const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-
       /* convert the decrypted secret into message object */
-      message = openpgp.Message.fromText(plaintext);
+      message = await openpgp.createMessage({text: decrypted});
 
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys,
+        encryptionKeys: pubKeys,
       });
     });
   }
@@ -128,20 +122,18 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
-      const decrypted = await openpgp.decrypt({
+      const {data: decrypted} = await openpgp.decrypt({
         message,
-        privateKeys: privKey,
+        decryptionKeys: privKey,
       });
 
-      /* convert decrypted data into plain text */
-      const plaintext = await openpgp.stream.readToEnd(decrypted.data);
       /* convert the decrypted secret into message object */
-      message = openpgp.Message.fromText(plaintext);
+      message = await openpgp.createMessage({text: decrypted});
 
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys,
+        encryptionKeys: pubKeys,
       });
     });
   }
@@ -151,21 +143,18 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
-      const decrypted = await openpgp.decrypt({
+      const {data: decrypted} = await openpgp.decrypt({
         message,
-        privateKeys: privKey,
+        decryptionKeys: privKey,
       });
 
-      /* convert decrypted data into plain text */
-      const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-
       /* convert the decrypted secret into message object */
-      message = openpgp.Message.fromText(plaintext);
+      message = await openpgp.createMessage({text: decrypted});
 
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys,
+        encryptionKeys: pubKeys,
       });
     });
   }
@@ -175,13 +164,13 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
 
 VaultSchema.methods.decryption = async function (privateKey) {
   const vault = this;
-
-  /* read the armored key */
-  const privKey = await openpgp.readKey({ armoredKey: privateKey });
   const passphrase = process.env.PASSPHRASE;
 
-  /* decrypt it using passphrase */
-  await privKey.decrypt(passphrase);
+  /* decrypt private key using passphrase */
+  const privKey = await openpgp.decryptKey({
+    privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
+    passphrase
+  })
 
   if (typeof vault.ssh !== undefined) {
     var ssh_secret = vault.ssh;
@@ -215,14 +204,12 @@ VaultSchema.methods.decryption = async function (privateKey) {
         var message = await openpgp.readMessage({ armoredMessage: msg });
 
         /* decrypt the secret */
-        const decrypted = await openpgp.decrypt({
+        const {data: decryptedData} = await openpgp.decrypt({
           message,
-          privateKeys: privKey,
+          decryptionKeys: privKey,
         });
 
-        /* convert decrypted data into plain text */
-        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-        return plaintext;
+        return decryptedData;
       })
     );
   }
@@ -243,14 +230,12 @@ VaultSchema.methods.decryption = async function (privateKey) {
         var message = await openpgp.readMessage({ armoredMessage: msg });
 
         /* decrypt the secret */
-        const decrypted = await openpgp.decrypt({
+        const {data: decryptedData} = await openpgp.decrypt({
           message,
-          privateKeys: privKey,
+          decryptionKeys: privKey,
         });
 
-        /* convert decrypted data into plain text */
-        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-        return plaintext;
+        return decryptedData;
       })
     );
   }
@@ -271,14 +256,12 @@ VaultSchema.methods.decryption = async function (privateKey) {
         var message = await openpgp.readMessage({ armoredMessage: msg });
 
         /* decrypt the secret */
-        const decrypted = await openpgp.decrypt({
+        const {data: decryptedData} = await openpgp.decrypt({
           message,
-          privateKeys: privKey,
+          decryptionKeys: privKey,
         });
 
-        /* convert decrypted data into plain text */
-        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-        return plaintext;
+        return decryptedData;
       })
     );
   }
@@ -298,14 +281,12 @@ VaultSchema.methods.decryption = async function (privateKey) {
         var message = await openpgp.readMessage({ armoredMessage: msg });
 
         /* decrypt the secret */
-        const decrypted = await openpgp.decrypt({
+        const {data: decryptedData} = await openpgp.decrypt({
           message,
-          privateKeys: privKey,
+          decryptionKeys: privKey,
         });
 
-        /* convert decrypted data into plain text */
-        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-        return plaintext;
+        return decryptedData;
       })
     );
   }
