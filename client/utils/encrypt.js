@@ -7,10 +7,10 @@ export default async function encryptSecret(publicKeys, secret) {
     publicKeysArmored.map((armoredKey) => openpgp.readKey({ armoredKey }))
   );
 
-  const message = openpgp.Message.fromText(secret);
+  const message = await openpgp.createMessage({text: secret});
   const encrypted = await openpgp.encrypt({
     message,
-    publicKeys: pubKeys,
+    encryptionKeys: pubKeys,
   });
 
   return encrypted;

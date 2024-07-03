@@ -8,12 +8,12 @@ const openpgp = require('openpgp');
  * @returns an object containing the generated public/private key pair
  */
 export default async function generateKeys(email) {
-  const { privateKeyArmored, publicKeyArmored } = await openpgp.generateKey({
+  const { privateKey, publicKey } = await openpgp.generateKey({
     type: 'ecc',
     curve: 'curve25519',
     userIDs: { email },
     passphrase: process.env.PASSPHRASE,
   });
 
-  return { privateKey: privateKeyArmored, publicKey: publicKeyArmored };
+  return { privateKey, publicKey };
 }

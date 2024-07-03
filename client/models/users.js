@@ -46,7 +46,7 @@ UserSchema.methods.storeKeys = async function (privateKey = null) {
   const user = this;
 
   /* convert private key into message object for encryption */
-  const message = openpgp.Message.fromText(privateKey);
+  const message = await openpgp.createMessage({text: privateKey});
 
   /* saving private key is optional */
   if (privateKey) {
