@@ -25,6 +25,17 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: 'calc(100vh - 4.05rem)',
   },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+    }
+  }
 }));
 
 export default function Dashboard({ teamName }) {
