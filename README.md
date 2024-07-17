@@ -19,4 +19,10 @@ the keyring.
 - All secret information is encrypted using the public keys of all team members and stored in the team vault.
 - The information is decrypted using the private key of the user.
 
+<h4>To start the project locally</h4>
+
+- `npm run dev` to start the NextJS server.
+- Make sure to set up a `.env.local` file and specify the required parameters (Refer [env.local.example](https://github.com/aayushhyadav/swush/blob/release/1.1.0/client/.env.local.example)).
+- Ensure a local or production instance of MongoDB (MongoDB Atlas can be used to create the cluster) is configured.
+
 Link to the [Demo Video](https://coepac-my.sharepoint.com/:v:/g/personal/correasn18_comp_coep_ac_in/Eai2vgXbFm1MjDmhDnNiH3QBEVFXASAcCudnbHIhXyofxw?e=d1SVgs).
