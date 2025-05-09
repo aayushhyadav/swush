@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    height: '100vh',
     backgroundColor: theme.palette.primary.main,
     alignItems: 'center',
   },

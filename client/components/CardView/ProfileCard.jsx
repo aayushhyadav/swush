@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: `100%`,
+    height: '100vh',
     minWidth: 275,
     backgroundColor: theme.palette.primary.main,
     padding: theme.spacing(5),
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonContainer: {
     bottom: theme.spacing(5),
+    position: 'fixed',
     [theme.breakpoints.down(500)]: {
       bottom: theme.spacing(1),
     },

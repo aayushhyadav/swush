@@ -37,14 +37,16 @@ const useStyles = makeStyles((theme) => ({
   buttonContainer: {
     paddingTop: theme.spacing(12),
     bottom: 0,
+    position: 'fixed',
     [theme.breakpoints.down(500)]: {
-      bottom: theme.spacing(1),
+      bottom: theme.spacing(2),
     },
   },
   updateButton: {
     fontSize: '1.15rem',
     color: theme.palette.text.main,
     borderColor: theme.palette.text.accent,
+    margin: '10px'
   },
   downloadIcon: {
     color: theme.palette.text.main,

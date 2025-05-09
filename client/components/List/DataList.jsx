@@ -13,7 +13,7 @@ const DataList = ({ description, secret }) => {
       globalDispatch({ type: 'SELECTED_SECRET', payload: 'Your Secret' });
     }
     if (!globalState.selectedDes || globalState.secretIndex === -1) {
-      globalDispatch({ type: 'SELECTED_DES', payload: 'View your secret here!' });
+      globalDispatch({ type: 'SELECTED_DES', payload: '' });
     }
   }, [globalState.teamIndex, globalState.secretIndex]);
 
