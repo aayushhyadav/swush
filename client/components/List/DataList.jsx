@@ -10,7 +10,7 @@ const DataList = ({ description, secret }) => {
 
   useEffect(() => {
     if (!globalState.selectedSecret || globalState.secretIndex === -1) {
-      globalDispatch({ type: 'SELECTED_SECRET', payload: 'Your Secret' });
+      globalDispatch({ type: 'SELECTED_SECRET', payload: '' });
     }
     if (!globalState.selectedDes || globalState.secretIndex === -1) {
       globalDispatch({ type: 'SELECTED_DES', payload: '' });

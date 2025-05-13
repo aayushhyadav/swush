@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 import { connectToDatabase } from 'utils/connectDb';
 import User from 'models/users';
 import generateKeys from 'utils/generateKeys';
@@ -19,13 +20,16 @@ const SignUpApi = async (req, res) => {
     email = email.toString();
     password = password.toString();
 
+    const saltRounds = 10
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const jwt = generateJwt(email);
     const { privateKey, publicKey } = await generateKeys(email);
 
     const userInfo = {
       name,
       email,
-      password,
+      password: hashedPassword,
       publicKey,
       privateKey,
     };

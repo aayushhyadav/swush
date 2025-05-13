@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 import User from 'models/users';
 import withSession from 'utils/withSession';
 import { connectToDatabase } from 'utils/connectDb';
@@ -17,9 +18,12 @@ const LoginApi = async (req, res) => {
     if (!user) {
       return res.status(404).json({ Error: 'User not found!' });
     }
-    if (password !== user.password) {
-      return res.status(200).json({ Error: 'Incorrect password!' });
-    }
+    
+    bcrypt.compare(password, user.password, (err, result) => {
+      if (!result) {
+        return res.status(200).json({ Error: 'Incorrect password!' });
+      }
+    });
 
     const jwt = generateJwt(email);
     const { name, publicKey, _id } = user;
