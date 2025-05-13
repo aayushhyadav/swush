@@ -113,8 +113,9 @@ export default function DialogSelect() {
         payload: [...globalState.teams, res.data.team],
       });
       globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
-
+      
       handleDialogOpenState();
+
     } catch (error) {
       if (error?.response?.status === 500) {
         setStatus({ type: 'error', msg: error.response.data.Error });

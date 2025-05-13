@@ -9,7 +9,6 @@ export default async function (req, res) {
     await connectToDatabase();
 
     const { jwt, teamName, description, secret, secretType, filename } = req.body;
-
     const user = await getAuthenticatedUser(jwt);
 
     var isMember = false;
@@ -30,11 +29,10 @@ export default async function (req, res) {
     const encryptedSecret = await encryptSecret(publicKeys, secret);
 
     // check if valid secretType
-
     const vault = await Vault.findById(team.vaults[0]._id).exec();
     await vault.addSecret(secretType, description, encryptedSecret, filename);
-
     return res.json({ Info: 'Successfully added new secret!', secret });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json('Internal server error.');

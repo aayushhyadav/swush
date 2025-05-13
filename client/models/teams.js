@@ -22,7 +22,11 @@ const TeamSchema = new Schema({
     unique: true,
     trim: true,
   },
-
+  aesKey: {
+    type: String,
+    required: true,
+    unique: true
+  },
   admins: [UserRefSchema],
   members: [UserRefSchema],
   vaults: [VaultRefSchema],
